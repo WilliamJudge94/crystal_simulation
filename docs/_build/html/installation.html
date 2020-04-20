@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installing Required Packages &mdash; Crystal Simulation v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="make_crystal.html" />
+    <link rel="prev" title="Welcome to Crystal Simulation’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Crystal Simulation
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installing Required Packages</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#atomsk">AtomSK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ovito-visualization">Ovito Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ovito-api">Ovito API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pynx">PYNX</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Crystal Simulation</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installing Required Packages</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installing-required-packages">
+<h1>Installing Required Packages<a class="headerlink" href="#installing-required-packages" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="atomsk">
+<h2>AtomSK<a class="headerlink" href="#atomsk" title="Permalink to this headline">¶</a></h2>
+<p>All installation instructions for AtomSK can be found on their documentation website <a class="reference external" href="https://atomsk.univ-lille.fr/dl.php">https://atomsk.univ-lille.fr/dl.php</a> .</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is highly recommended to install this program onto a linux operating system since it is
+significantly easier to install.</p>
+</div>
+</div>
+<div class="section" id="ovito-visualization">
+<h2>Ovito Visualization<a class="headerlink" href="#ovito-visualization" title="Permalink to this headline">¶</a></h2>
+<p>Ovito is used to view the crystals after creation as well as importing x, y, z atom posisitons into a python format.
+Ovito Visualization tool can be downloaded through <a class="reference external" href="https://www.ovito.org">https://www.ovito.org</a> .</p>
+</div>
+<div class="section" id="ovito-api">
+<h2>Ovito API<a class="headerlink" href="#ovito-api" title="Permalink to this headline">¶</a></h2>
+<p>The Ovito API can be imported into python, which allows the user to import x, y, z atomic positions from the AtomSK
+files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install ovito
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The atomic positions recieved from the Ovito API may not be the same as the x, y, z positions written in the file.
+Special interpreters are used in Ovitio to retrieve true atomic position according to all parameters specialized
+parameters dictated by the file type.</p>
+</div>
+</div>
+<div class="section" id="pynx">
+<h2>PYNX<a class="headerlink" href="#pynx" title="Permalink to this headline">¶</a></h2>
+<p>The original importing script was given to the author in a Google Colab setting. Below is the Google Colab cell used
+to import all required packges for pynx operation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One can easily change this importer into a terminal importer by manually going through the script and
+installing packages as dictated.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Install every required package. Note that if you only want CUDA,
+  # you can skip PyOpenCL, clFFT and gpyfft
+
+install_opencl = False
+
+try:
+  # Do not reinstall if pynx is already present (useful for &#39;run all&#39;)
+  import pynx
+
+except ModuleNotFoundError:
+
+  # Base scientific computing packages and SILX
+  !pip install numpy cython scipy matplotlib ipython scikit-image
+  !pip install h5py hdf5plugin h5glance silx fabio
+
+  # Install PyCUDA &amp; PyOpenCL
+  !pip install pycuda scikit-cuda
+
+  # Install PyNX (nightly)
+  !pip install http://ftp.esrf.fr/pub/scisoft/PyNX/pynx-devel-nightly.tar.bz2
+
+  if install_opencl:
+    !pip install opencl
+
+    # Install clFFT
+    !git clone https://github.com/clMathLibraries/clFFT.git --branch=v2.12.2
+    !mkdir build
+    !cd build &amp;&amp; cmake ../clFFT/src &amp;&amp; make all install
+
+    # This is needed so that gpyfft can find libclFFT
+    !ln -sf /usr/local/lib64/libclFFT.so.2 /usr/lib/
+
+    # Install gpyfft (we need a specific version for PyNX compatibility)
+    !git clone https://github.com/geggo/gpyfft.git
+    !cd gpyfft &amp;&amp; git checkout 2c07fa8e7674757 &amp;&amp; python setup.py install
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="make_crystal.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Crystal Simulation’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, William Judge
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
