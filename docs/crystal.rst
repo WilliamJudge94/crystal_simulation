@@ -23,7 +23,7 @@ Better documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.
 
 
 .. figure:: images/Au_unitcell.png
-    :scale: 50 %
+    :scale: 25 %
     :align: center
 
 Making A Crystal
@@ -73,7 +73,7 @@ example is for a 2D metal. Below is an example code on how to create a 3D crysta
     # The output of cmd is then used as a terminal command
 
 .. figure:: images/Au_duplicate.png
-    :scale: 50 %
+    :scale: 25 %
     :align: center
 
 Shifting Crystal To Center
@@ -100,7 +100,7 @@ Shifting Crystal To Center
     Documentation on how to use -shift function can be found at https://atomsk.univ-lille.fr/doc.php
 
 .. figure:: images/Au_shift.png
-    :scale: 50 %
+    :scale: 25 %
     :align: center
 
 
