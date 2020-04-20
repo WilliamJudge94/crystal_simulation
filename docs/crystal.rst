@@ -19,8 +19,12 @@ Better documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.
 .. code:: bash
 
     # To be run in terminal
-    atomsk --create fcc 4.0872 Au orient [-110] [11-1] [112] Au_unitcell.cfg
+    atomsk --create fcc 4.0782 Au orient [-110] [11-1] [112] Au_unitcell.cfg
 
+
+.. figure:: images/Au_unitcell.png
+    :scale: 50 %
+    :align: center
 
 Making A Crystal
 ================
@@ -29,6 +33,12 @@ The module used to create a base crystal is found at https://atomsk.univ-lille.f
 example is for a 2D metal. Below is an example code on how to create a 3D crystal.
 
 .. code:: python
+
+    pip install ase
+
+.. code:: python
+
+    from ase.io import read
 
     og_cfg_file = './Au_unitcell.cfg'
     output_file_crystal = './Au_crystal.cfg'
@@ -62,6 +72,9 @@ example is for a 2D metal. Below is an example code on how to create a 3D crysta
 
     # The output of cmd is then used as a terminal command
 
+.. figure:: images/Au_duplicate.png
+    :scale: 50 %
+    :align: center
 
 Shifting Crystal To Center
 ==========================
@@ -86,12 +99,19 @@ Shifting Crystal To Center
 
     Documentation on how to use -shift function can be found at https://atomsk.univ-lille.fr/doc.php
 
+.. figure:: images/Au_shift.png
+    :scale: 50 %
+    :align: center
+
+
 Slicing A Crystal
 ==================
 
 .. code:: python
 
+    # No idea what hycpy is
     from hycpy import crystal
+
     axes = crystal.zone_axes('<100>','<110>','<111>','<210>','<211>','<221>')
 
     Ncut = np.random.randint(
