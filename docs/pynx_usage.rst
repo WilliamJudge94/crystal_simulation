@@ -69,6 +69,8 @@ Obtain Diffraction Pattern
 Obtain Inverse Fourier Transform
 =================================
 
+.. code:: python
+
     plt.figure(figsize=(14,6))
 
     # Along L
