@@ -28,13 +28,15 @@ files.
 
 .. code:: bash
 
+    # Command to be run in terminal
     pip install ovito
 
 .. note::
 
-    The atomic positions recieved from the Ovito API may not be the same as the x, y, z positions written in the file.
+    The atomic positions returned from the Ovito API may not be the same as the x, y, z positions written in the file.
     Special interpreters are used in Ovitio to retrieve true atomic position according to all parameters specialized
-    parameters dictated by the file type.
+    parameters dictated by the file type. These returned x, y, z positions should match the atomic position in the Ovito
+    Visualization GUI.
 
 
 PYNX
