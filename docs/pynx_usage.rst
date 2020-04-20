@@ -22,6 +22,32 @@ Importing Modules
     from ovito.io import import_file
 
 
+Obtaining GPU Name and GPU Language
+===================================
+
+.. code:: python
+
+    # See what processing units are avalable
+    from pynx.processing_unit import cuda_device, opencl_device, has_opencl, has_cuda
+
+    gpu_name = None
+    gpu_language = None
+
+    print("has_opencl:", has_opencl,"has_cuda:", has_cuda)
+
+    if has_opencl:
+        res = opencl_device.available_gpu_speed(verbose=True)
+    if len(res):
+        gpu_name = res[0][0].name()
+        gpu_language = "OpenCL"
+
+    if has_cuda:
+        res = cuda_device.available_gpu_speed(verbose=True)
+    if len(res):
+        gpu_name = res[0][0].name()
+        gpu_language = "CUDA"
+
+
 Obtain Diffraction Pattern
 ===========================
 
