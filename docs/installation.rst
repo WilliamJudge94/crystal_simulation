@@ -38,6 +38,23 @@ files.
     parameters dictated by the file type. These returned x, y, z positions should match the atomic position in the Ovito
     Visualization GUI.
 
+ase
+====
+
+Some file reader
+
+.. code:: python
+
+    pip install ase
+
+hycpy
+======
+
+Not 100% sure
+
+.. code:: python
+
+    # No idea on how to install
 
 PYNX
 ====
