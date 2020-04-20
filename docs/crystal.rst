@@ -82,6 +82,9 @@ Shifting Crystal To Center
 
     # Run cmd in terminal
 
+.. note::
+
+    Documentation on how to use -shift function can be found at https://atomsk.univ-lille.fr/doc.php
 
 Slicing A Crystal
 ==================
@@ -121,6 +124,9 @@ Slicing A Crystal
 
     # Run cmd's in terminal
 
+.. note::
+
+    Documentation on how to use -cut function can be found at https://atomsk.univ-lille.fr/doc.php
 
 Placing Edge Defect
 ===================
@@ -149,6 +155,12 @@ Placing Edge Defect
 
     # Run cmd in terminal
 
+.. note::
+
+    Documentation on how to use -dislocation along with the edge2 function can
+    be found at https://atomsk.univ-lille.fr/tutorial_Al_edge.php
+
+
 Placing Screw Defect
 ====================
 
@@ -165,6 +177,11 @@ Placing Screw Defect
     cmd += f' {output_file_crystal_shift_slice_screw}'
 
     # Run cmd in terminal
+
+.. note::
+
+    Documentation on how to use -dislocation along with the screw function can
+    be found at https://atomsk.univ-lille.fr/tutorial_Al_screw.php
 
 Relaxation of Crystal
 ======================
@@ -188,7 +205,12 @@ This will be used to reorient the crystal. This is needed to view the (111) refl
     cmd = f'atomsk {input_file} -orient {original_orientation} {desired_reorient} {output_file}'
 
 
-This command should be run in a terminal
+    # Run cmd in a terminal
+
+
+.. note::
+
+    Documentation on how to use -orient function can be found at https://atomsk.univ-lille.fr/doc.php
 
 
 Viewing Crystal
