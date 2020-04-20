@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>&lt;no title&gt; &mdash; Crystal Simulation v0.0.1 documentation</title>
+  <title>Using pynx.scattering &mdash; Crystal Simulation v0.0.1 documentation</title>
   
 
   
@@ -34,7 +34,8 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Crystal Creation" href="crystal.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -78,10 +79,18 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul class="simple">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installing Required Packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crystal.html">Crystal Creation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using pynx.scattering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#importing-modules">Importing Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#obtain-diffraction-pattern">Obtain Diffraction Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#obtain-inverse-fourier-transform">Obtain Inverse Fourier Transform</a></li>
 </ul>
-</div>
+</li>
+</ul>
+
             
           
         </div>
@@ -125,7 +134,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>&lt;no title&gt;</li>
+      <li>Using pynx.scattering</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -144,12 +153,128 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
+  <div class="section" id="using-pynx-scattering">
+<h1>Using pynx.scattering<a class="headerlink" href="#using-pynx-scattering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="importing-modules">
+<h2>Importing Modules<a class="headerlink" href="#importing-modules" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">tifffile</span> <span class="kn">as</span> <span class="nn">tif</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="c1"># Pynx</span>
+<span class="kn">from</span> <span class="nn">pynx.scattering</span> <span class="kn">import</span> <span class="n">Fhkl_thread</span>
+<span class="kn">from</span> <span class="nn">pynx.utils.plot_utils</span> <span class="kn">import</span> <span class="n">complex2rgbalog</span><span class="p">,</span> <span class="n">complex2rgbalin</span>
+
+<span class="c1"># Ovito importer</span>
+<span class="kn">from</span> <span class="nn">ovito.io</span> <span class="kn">import</span> <span class="n">import_file</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="obtain-diffraction-pattern">
+<h2>Obtain Diffraction Pattern<a class="headerlink" href="#obtain-diffraction-pattern" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;./Au_cut_defect_reorient.cfg&#39;</span>
+
+
+<span class="c1"># Importing xyz atom postions using ovito API</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">import_file</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">positions</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">positions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">positions</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="c1"># Au lattice constant</span>
+<span class="n">lattice</span> <span class="o">=</span> <span class="mf">4.0782</span>
+
+<span class="c1"># Reflection to view</span>
+<span class="n">hkl</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Sampling rate</span>
+<span class="n">nstep</span> <span class="o">=</span> <span class="mi">150</span>
+
+<span class="n">dq</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">lattice</span><span class="o">/</span><span class="n">nstep</span>
+
+<span class="c1"># Resolution of pattern</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">dqx</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nx</span><span class="p">)[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">-</span><span class="n">nx</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dq</span>
+<span class="n">dqy</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ny</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">-</span><span class="n">ny</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dq</span>
+<span class="n">dqz</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nz</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:]</span><span class="o">-</span><span class="n">nz</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dq</span>
+
+<span class="n">qx</span> <span class="o">=</span> <span class="n">hkl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lattice</span><span class="o">+</span><span class="n">dqx</span>
+<span class="n">qy</span> <span class="o">=</span> <span class="n">hkl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lattice</span><span class="o">+</span><span class="n">dqy</span>
+<span class="n">qz</span> <span class="o">=</span> <span class="n">hkl</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">lattice</span><span class="o">+</span><span class="n">dqz</span>
+
+<span class="n">fhkl</span><span class="p">,</span> <span class="n">dt</span> <span class="o">=</span><span class="n">Fhkl_thread</span><span class="p">(</span><span class="n">qx</span><span class="p">,</span><span class="n">qy</span><span class="p">,</span><span class="n">qz</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">occ</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">gpu_name</span><span class="o">=</span><span class="n">gpu_name</span><span class="p">,</span><span class="n">language</span><span class="o">=</span><span class="n">gpu_language</span><span class="p">)</span>
+<span class="n">intensity</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fhkl</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="n">central_slice</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">intensity</span><span class="p">[:,:,</span><span class="n">nz</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="obtain-inverse-fourier-transform">
+<h2>Obtain Inverse Fourier Transform<a class="headerlink" href="#obtain-inverse-fourier-transform" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Along L</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fhkl</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">sx</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sx</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sy</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sy</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;H (r.l.u.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;K (r.l.u.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Integrated intensity along L&quot;</span><span class="p">)</span>
+
+<span class="c1"># Along K</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fhkl</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">sx</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sx</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sy</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sy</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;H (r.l.u.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;L (r.l.u.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Integrated intensity along K&quot;</span><span class="p">)</span>
+
+<span class="c1"># Complex Along L Center</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">complex2rgbalog</span><span class="p">(</span><span class="n">fhkl</span><span class="p">[</span><span class="n">nsz</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">sx</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sx</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sy</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">sy</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="n">a</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;H (r.l.u.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;K (r.l.u.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Complex amplitude in L center&quot;</span><span class="p">)</span>
+
+<span class="c1"># Inverse Fourier transform of calculated array - don&#39;t forget the fftshoft !</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftn</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">fhkl</span><span class="p">)))</span>
+<span class="n">dy</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">rho</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">rho</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e9</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rho</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">dx</span> <span class="o">*</span> <span class="n">nsx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">nsx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">dy</span> <span class="o">*</span> <span class="n">nsy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">nsy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Integrated density along Z&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X (nm)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y (nm)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">complex2rgbalin</span><span class="p">(</span><span class="n">rho</span><span class="p">[</span><span class="n">nsz</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">dx</span> <span class="o">*</span> <span class="n">nsx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">nsx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">dy</span> <span class="o">*</span> <span class="n">nsy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">nsy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X (nm)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y (nm)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1e9</span><span class="o">*</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Complex amplitude in Z center&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="crystal.html" class="btn btn-neutral float-left" title="Crystal Creation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

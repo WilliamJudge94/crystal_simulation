@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>&lt;no title&gt; &mdash; Crystal Simulation v0.0.1 documentation</title>
+  <title>Crystal Creation &mdash; Crystal Simulation v0.0.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="pynx_usage.html" />
+    <link rel="next" title="Using pynx.scattering" href="pynx_usage.html" />
     <link rel="prev" title="Installing Required Packages" href="installation.html" /> 
 </head>
 
@@ -81,8 +81,22 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installing Required Packages</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Crystal Creation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#goal-of-descriptions-below">Goal of Descriptions Below</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-crystal-unit-cell">Making Crystal Unit Cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-a-crystal">Making A Crystal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shifting-crystal-to-center">Shifting Crystal To Center</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#slicing-a-crystal">Slicing A Crystal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#placing-edge-defect">Placing Edge Defect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#placing-screw-defect">Placing Screw Defect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#relaxation-of-crystal">Relaxation of Crystal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reset-orientation-of-crystal">Reset Orientation of Crystal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#viewing-crystal">Viewing Crystal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pynx_usage.html">Using pynx.scattering</a></li>
 </ul>
 
             
@@ -128,7 +142,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>&lt;no title&gt;</li>
+      <li>Crystal Creation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -147,7 +161,144 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
+  <div class="section" id="crystal-creation">
+<h1>Crystal Creation<a class="headerlink" href="#crystal-creation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal-of-descriptions-below">
+<h2>Goal of Descriptions Below<a class="headerlink" href="#goal-of-descriptions-below" title="Permalink to this headline">¶</a></h2>
+<p>To create a Gold nano-particle with an edge/screw defect with a Burger’s Vector of [-110]. Relax this simulated crystal
+in LAMMPS. Re-orient the crystal so PYNX can simulated the (111) reflection.</p>
+</div>
+<div class="section" id="making-crystal-unit-cell">
+<h2>Making Crystal Unit Cell<a class="headerlink" href="#making-crystal-unit-cell" title="Permalink to this headline">¶</a></h2>
+<p>This procedure makes a single unit cell to be replicated along a User defined axis. To be carried out in a terminal.
+Better documentation can be found <a class="reference external" href="https://atomsk.univ-lille.fr/tutorial_Al_edge.php">https://atomsk.univ-lille.fr/tutorial_Al_edge.php</a> .</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>atomsk --create fcc <span class="m">4</span>.0872 Au orient <span class="o">[</span>-110<span class="o">]</span> <span class="o">[</span><span class="m">11</span>-1<span class="o">]</span> <span class="o">[</span><span class="m">112</span><span class="o">]</span> Au_unitcell.cfg
+</pre></div>
+</div>
+</div>
+<div class="section" id="making-a-crystal">
+<h2>Making A Crystal<a class="headerlink" href="#making-a-crystal" title="Permalink to this headline">¶</a></h2>
+<p>The module used to create a base crystal is found at <a class="reference external" href="https://atomsk.univ-lille.fr/tutorial_Al_edge.php">https://atomsk.univ-lille.fr/tutorial_Al_edge.php</a> . However, this
+example is for a 2D metal. Below is an example code on how to create a 3D crystal.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">og_cfg_file</span> <span class="o">=</span> <span class="s1">&#39;./Au_unitcell.cfg&#39;</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;./Au_crystal.cfg&#39;</span>
+
+<span class="c1"># Lattice constant for AU</span>
+<span class="n">lattice</span> <span class="o">=</span> <span class="mf">4.078</span>
+
+<span class="c1"># Poisson for Au edge defect</span>
+<span class="n">poisson</span> <span class="o">=</span> <span class="s1">&#39;0.42&#39;</span> <span class="c1"># gold</span>
+
+<span class="c1"># Supercell size for atomsk</span>
+<span class="n">size_xyz</span> <span class="o">=</span> <span class="mf">204.7156</span>
+
+<span class="c1"># Reading initial Au_unitcell.cfg file</span>
+<span class="n">atom_unit</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">og_cfg_file</span><span class="p">)</span>
+<span class="n">cell</span> <span class="o">=</span> <span class="n">atom_unit</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+
+<span class="n">rep</span> <span class="o">=</span> <span class="n">size_xyz</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+
+<span class="n">rep_final</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rep</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+
+<span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;atomsk </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">og_cfg_file</span>
+
+<span class="c1"># The command used inside a terminal</span>
+<span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -dup </span><span class="si">%d</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">rep_final</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="n">rep_final</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                         <span class="n">rep_final</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">cmd</span> <span class="o">+=</span> <span class="n">f</span><span class="s1">&#39; {output_file}&#39;</span>
+
+
+<span class="c1"># The output of cmd is then used as a terminal command</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shifting-crystal-to-center">
+<h2>Shifting Crystal To Center<a class="headerlink" href="#shifting-crystal-to-center" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shift</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-0.5*box&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
+
+<span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -shift </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">shift</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="slicing-a-crystal">
+<h2>Slicing A Crystal<a class="headerlink" href="#slicing-a-crystal" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hycpy</span> <span class="kn">import</span> <span class="n">crystal</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">crystal</span><span class="o">.</span><span class="n">zone_axes</span><span class="p">(</span><span class="s1">&#39;&lt;100&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;110&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;111&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;210&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;211&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;221&gt;&#39;</span><span class="p">)</span>
+
+<span class="n">Ncut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+                        <span class="mi">6</span><span class="p">,</span> <span class="c1"># min number of cut per crystal</span>
+                        <span class="mi">20</span><span class="p">,</span> <span class="c1"># max number of cut per crystal</span>
+                        <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="c1"># number of crystals to make</span>
+                        <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">crystal_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># for shape cutting</span>
+<span class="n">depths</span> <span class="o">=</span> <span class="n">size_xyz</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">Ncut</span><span class="p">[</span><span class="n">crystal_idx</span><span class="p">],</span>
+                                            <span class="n">low</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                                            <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">Ncut</span><span class="p">[</span><span class="n">crystal_idx</span><span class="p">])</span>
+
+
+<span class="c1"># cut the crystal shape</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">ix</span><span class="p">],</span> <span class="n">depths</span><span class="p">):</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -cut above </span><span class="si">%.2f</span><span class="s1"> [</span><span class="si">%d%d%d</span><span class="s1">]&#39;</span><span class="o">%</span> <span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="placing-edge-defect">
+<h2>Placing Edge Defect<a class="headerlink" href="#placing-edge-defect" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># magnitude of deform, shear, and dislocation</span>
+<span class="n">rands</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">rands2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1">#random.uniform(1.1, 5)</span>
+<span class="n">rands3</span> <span class="o">=</span> <span class="n">lattice</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span>
+
+<span class="c1"># Poisson for Au edge defect</span>
+<span class="n">poisson</span> <span class="o">=</span> <span class="s1">&#39;0.42&#39;</span>
+
+<span class="n">sdmap</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span><span class="s1">&#39;Z&#39;</span><span class="p">]</span>
+
+
+<span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -dislocation 0.0 0.0 edge2 </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%.6f</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">sdmap</span><span class="p">[</span><span class="n">v211</span><span class="p">],</span> <span class="n">sdmap</span><span class="p">[</span><span class="n">v111</span><span class="p">],</span> <span class="n">rands3</span><span class="p">,</span> <span class="n">poisson</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="placing-screw-defect">
+<h2>Placing Screw Defect<a class="headerlink" href="#placing-screw-defect" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdmap</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span><span class="s1">&#39;Z&#39;</span><span class="p">]</span>
+
+<span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -dislocation 0.0 0.0 screw </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%.6f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">sdmap</span><span class="p">[</span><span class="n">v110</span><span class="p">],</span> <span class="n">sdmap</span><span class="p">[</span><span class="n">v111</span><span class="p">],</span> <span class="n">rands3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="relaxation-of-crystal">
+<h2>Relaxation of Crystal<a class="headerlink" href="#relaxation-of-crystal" title="Permalink to this headline">¶</a></h2>
+<p>Coming Soon…</p>
+</div>
+<div class="section" id="reset-orientation-of-crystal">
+<h2>Reset Orientation of Crystal<a class="headerlink" href="#reset-orientation-of-crystal" title="Permalink to this headline">¶</a></h2>
+<p>This will be used to reorient the crystal. This is needed to view the (111) refletion in pynx.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">original_orientation</span> <span class="o">=</span> <span class="s1">&#39;[-110] [11-1] [112]&#39;</span>
+<span class="n">desired_reorient</span> <span class="o">=</span> <span class="s1">&#39;[100] [010] [001]&#39;</span>
+
+<span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;Au_cut_defect_crystal.cfg&#39;</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;Au_cut_defect_reorient_crystal.cfg&#39;</span>
+
+<span class="n">cmd</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;atomsk {input_file} -orient {original_orientation} {desired_reorient} {output_file}&#39;</span>
+</pre></div>
+</div>
+<p>This command should be run in a terminal</p>
+</div>
+<div class="section" id="viewing-crystal">
+<h2>Viewing Crystal<a class="headerlink" href="#viewing-crystal" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
 
            </div>
            
@@ -156,7 +307,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pynx_usage.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pynx_usage.html" class="btn btn-neutral float-right" title="Using pynx.scattering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installation.html" class="btn btn-neutral float-left" title="Installing Required Packages" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
