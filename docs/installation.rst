@@ -50,7 +50,7 @@ to import all required packges for pynx operation.
     One can easily change this importer into a terminal importer by manually going through the script and
     installing packages as dictated.
 
-.. code:: python
+.. code:: bash
 
     # Install every required package. Note that if you only want CUDA,
       # you can skip PyOpenCL, clFFT and gpyfft
