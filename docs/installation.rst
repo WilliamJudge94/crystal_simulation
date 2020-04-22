@@ -13,6 +13,7 @@ All installation instructions for AtomSK can be found on their documentation web
     It is highly recommended to install this program onto a linux operating system since it is
     significantly easier to install.
 
+
 Ovito Visualization
 ====================
 
@@ -38,25 +39,29 @@ files.
     parameters dictated by the file type. These returned x, y, z positions should match the atomic position in the Ovito
     Visualization GUI.
 
+
 ase
 ====
 
-Some file reader
+A file reader used to import some data
 
 .. code:: python
 
     pip install ase
 
-hycpy
-======
 
-Not 100% sure
+Custom crystal.py Module
+==========================
 
-.. code:: python
+Download the crystal.py file from the github repository https://github.com/WilliamJudge94/crystal_simulation . Make
+sure crystal.py is in your working directory.
 
-    # No idea on how to install
+.. note::
 
-PYNX
+    Make sure crystal.py is in your working directory
+
+
+pynx
 ====
 
 The original importing script was given to the author in a Google Colab setting. Below is the Google Colab cell used

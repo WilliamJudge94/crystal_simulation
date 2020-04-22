@@ -34,10 +34,6 @@ example is for a 2D metal. Below is an example code on how to create a 3D crysta
 
 .. code:: python
 
-    pip install ase
-
-.. code:: python
-
     from ase.io import read
 
     og_cfg_file = './Au_unitcell.cfg'
@@ -95,22 +91,24 @@ Shifting Crystal To Center
 
     # Run cmd in terminal
 
-.. note::
-
-    Documentation on how to use -shift function can be found at https://atomsk.univ-lille.fr/doc.php
-
 .. figure:: images/Au_shift.png
     :scale: 25 %
     :align: center
 
+.. note::
+
+    Documentation on how to use -shift function can be found at https://atomsk.univ-lille.fr/doc.php
 
 Slicing A Crystal
 ==================
 
+.. note::
+
+    Make sure crystal.py is in your working directory.
+
 .. code:: python
 
-    # No idea what hycpy is
-    from hycpy import crystal
+    import crystal
 
     axes = crystal.zone_axes('<100>','<110>','<111>','<210>','<211>','<221>')
 
