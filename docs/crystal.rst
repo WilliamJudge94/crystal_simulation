@@ -35,6 +35,7 @@ example is for a 2D metal. Below is an example code on how to create a 3D crysta
 .. code:: python
 
     from ase.io import read
+    import numpy as np
 
     og_cfg_file = './Au_unitcell.cfg'
     output_file_crystal = './Au_crystal.cfg'
@@ -110,68 +111,91 @@ Slicing A Crystal
 
     import crystal
 
+    # The axes of the crystal
     axes = crystal.zone_axes('<100>','<110>','<111>','<210>','<211>','<221>')
-
+    
+    # For documentation replication
+    np.random.seed(123)
+    
     Ncut = np.random.randint(
                             6, # min number of cut per crystal
                             20, # max number of cut per crystal
                             size=1, # number of crystals to make
                             dtype=int)
-
+    
     crystal_idx = 0
-
+    
     # For shape cutting
     depths = size_xyz * 0.5 * np.random.uniform(size=Ncut[crystal_idx],
                                                 low=0.0,
                                                 high=1.0)**(1./3)
-
+    
     ix = np.random.choice(axes.shape[0], size=Ncut[crystal_idx])
-
-
+    
+    
     # Creating cmd
-
+    
     cmd = 'atomsk %s'%output_file_crystal_shift
-
+    
     # Cut the crystal shape
     for ax, depth in zip(axes[ix], depths):
         cmd += ' -cut above %.2f [%d%d%d]'% (depth, ax[0], ax[1], ax[2])
-
+    
     # Add in save output
     output_file_crystal_shift_slice = './Au_crystal_shift_slice.cfg'
+    
     cmd += f' {output_file_crystal_shift_slice}'
+    
+    cmd
 
-    # Run cmd's in terminal
+
+.. figure:: images/slice.png
+    :scale: 25 %
+    :align: center
 
 .. note::
 
     Documentation on how to use -cut function can be found at https://atomsk.univ-lille.fr/doc.php
+
 
 Placing Edge Defect
 ===================
 
 .. code:: python
 
-    # Magnitude of deform, shear, and dislocation
+    # Magnitude of deform, shear, and dislocationa
     rands = np.random.normal(loc=0.0, scale=0.01, size=3)
     rands2 = np.random.normal(loc=0.0, scale=0.01, size=3)
 
-    #Random.uniform(1.1, 5)
-    rands3 = lattice * 0.5 * 2**0.5
+    # Lattice constant for Au
+    lattice = 4.0782
 
+    rands3 = lattice * 0.5 * 2**0.5
+    
     # Poisson for Au edge defect
     poisson = '0.42'
-
+    
     sdmap = ['X','Y','Z']
-
-
-    cmd = 'atomsk %s'%output_file_crystal_shift
-    cmd += ' -dislocation 0.0 0.0 edge2 %s %s %.6f %s'%(sdmap[v211], sdmap[v111], rands3, poisson)
-
+    
+    
+    #Burgers Vector = [-110] - defined by Us in this example
+    # Edge defect lies along the cartisan Z axis - the glide plane normal to Y
+    crystal_starting_orientation = '[-110] [11-1] [112]'
+    
+    
+    cmd = 'atomsk %s'%output_file_crystal_shift_slice
+    cmd += ' -dislocation 0.0 0.0 edge2 %s %s %.6f %s'%('Z', 'Y', rands3, poisson)
+    
     # Add in save output
-    output_file_crystal_shift_slice_edge = './Au_crystal_shift_slice_edge.cfg'
+    output_file_crystal_shift_slice_edge = '/Au_crystal_shift_slice_edge.cfg'
     cmd += f' {output_file_crystal_shift_slice_edge}'
 
+
     # Run cmd in terminal
+
+.. figure:: images/edge.png
+    :scale: 25 %
+    :align: center
 
 .. note::
 
@@ -185,21 +209,50 @@ Placing Screw Defect
 .. code:: python
 
     sdmap = ['X','Y','Z']
-
-    cmd = 'atomsk %s'%output_file_crystal_shift
-
-    cmd += ' -dislocation 0.0 0.0 screw %s %s %.6f'%(sdmap[v110], sdmap[v111], rands3)
-
+    
+    cmd = 'atomsk %s'%output_file_crystal_shift_slice_screw_shift
+    
+    cmd += ' -dislocation 0.0 0.0 screw %s %s %.6f'%('Z', 'Y', rands3)
+    
     # Add in save output
     output_file_crystal_shift_slice_screw = './Au_crystal_shift_slice_screw.cfg'
     cmd += f' {output_file_crystal_shift_slice_screw}'
 
+    
     # Run cmd in terminal
+
+.. figure:: images/screw.png
+    :scale: 25 %
+    :align: center
 
 .. note::
 
     Documentation on how to use -dislocation along with the screw function can
     be found at https://atomsk.univ-lille.fr/tutorial_Al_screw.php
+
+Shift Crystal Back
+===================
+
+.. code:: python
+
+    output_file_crystal_shift_slice_screw_shift = output_file_crystal_shift_slice_screw[:-4] + '_shift.cfg'
+    
+    # Initial starting command
+    cmd = 'atomsk %s'%output_file_crystal_shift_slice_screw
+    
+    # Add in shift
+    shift = ['0.5*box']*3
+    cmd += ' -shift %s'%(' '.join(shift))
+    
+    # Add in save output
+    cmd += f' {output_file_crystal_shift_slice_screw_shift}'
+
+    # Run cmd in terminal
+
+.. figure:: images/shift2.png
+    :scale: 25 %
+    :align: center
+
 
 Relaxation of Crystal
 ======================
@@ -225,6 +278,9 @@ This will be used to reorient the crystal. This is needed to view the (111) refl
 
     # Run cmd in a terminal
 
+.. figure:: images/reorient.png
+    :scale: 25 %
+    :align: center
 
 .. note::
 
