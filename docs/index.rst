@@ -12,7 +12,7 @@ Welcome to Crystal Simulation's documentation!
 
    installation
    crystal
-   pynx_usage
+   .. pynx_usage
    
 
 Indices and tables
