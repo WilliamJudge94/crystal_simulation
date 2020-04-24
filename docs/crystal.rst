@@ -10,8 +10,8 @@ To create a Gold nano-particle with an edge/screw defect with a Burger's Vector 
 in LAMMPS. Re-orient the crystal so PYNX can simulated the (111) reflection.
 
 
-Making Crystal Unit Cell
-========================
+Making Crystal Unit Cell - For Edge Defect
+===========================================
 
 This procedure makes a single unit cell to be replicated along a User defined axis. To be carried out in a terminal.
 Better documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.php .
@@ -20,6 +20,22 @@ Better documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.
 
     # To be run in terminal
     atomsk --create fcc 4.0782 Au orient [-110] [11-1] [112] Au_unitcell.cfg
+
+.. figure:: images/Au_unitcell.png
+    :scale: 25 %
+    :align: center
+
+
+Making Crystal Unit Cell - For Screw Defect
+============================================
+
+This procedure makes a single unit cell to be replicated along a User defined axis. To be carried out in a terminal.
+Better documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.php .
+
+.. code:: bash
+
+    # To be run in terminal
+    atomsk --create fcc 4.0782 Au orient [112] [11-1] [-110] Au_unitcell.cfg
 
 
 .. figure:: images/Au_unitcell.png
