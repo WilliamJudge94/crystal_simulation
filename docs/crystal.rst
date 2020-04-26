@@ -15,11 +15,23 @@ of the computational space. PYNX is then used to simulate the (111) reflection.
 
 
 Step 1: Create oriented unit cell based on desired defect.
+
+
 Step 2: Expand the unit cell to fill out a volume.
+
+
 Step 3: Shift the volume to be centered at the origin of the coordinate system
+
+
 Step 4: Insert a defect.
+
+
 Step 5: Relax the structure with LAMMPS.
+
+
 Step 6: Reorient the crystal unit cell edges to lie along coordinate axes.
+
+
 Step 7: Simulate a Bragg coherent diffraction pattern.
 
 
