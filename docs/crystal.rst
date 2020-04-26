@@ -6,15 +6,34 @@ Crystal Creation
 Goal of Descriptions Below
 ==========================
 
-To create a Gold nano-particle with an edge/screw defect with a Burger's Vector of [-110]. Relax this simulated crystal
-in LAMMPS. Re-orient the crystal so PYNX can simulated the (111) reflection.
+This tutorial specifically illustrates the steps to create a Gold (FCC)
+nano-particle with an edge/screw defect with a Burger's Vector of [-110].
+The crystal is then relaxed using LAMMPS to a lowest energy state. To the
+simulate a desired Bragg coherent diffraction pattern we then reorient
+the crystal so the crystaollographic axes lie along the coordinate system
+of the computational space. PYNX is then used to simulate the (111) reflection.
+
+
+Step 1: Create oriented unit cell based on desired defect.
+Step 2: Expand the unit cell to fill out a volume.
+Step 3: Shift the volume to be centered at the origin of the coordinate system
+Step 4: Insert a defect.
+Step 5: Relax the structure with LAMMPS.
+Step 6: Reorient the crystal unit cell edges to lie along coordinate axes.
+Step 7: Simulate a Bragg coherent diffraction pattern.
 
 
 Making Crystal Unit Cell - For Edge Defect
 ===========================================
 
-This procedure makes a single unit cell to be replicated along a User defined axis. To be carried out in a terminal.
-Better documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.php .
+This procedure makes a single unit cell to be replicated along a User defined axis.
+To be carried out in a terminal. The reason the unit cell is oriented along the specific
+axes is to facilitate adding a defect with a given Burger's vector later in this tutorial.
+If one is not planning to add a defect to the crystal the orientation can be along the
+coordinate axes [100] [010] [001] and the step to reorient the crystal along these axes
+at the end can be skipped.
+
+Detailed documentation for the primary tool used here can be found at https://atomsk.univ-lille.fr/tutorial_Al_edge.php .
 
 .. code:: bash
 
@@ -30,7 +49,7 @@ Making Crystal Unit Cell - For Screw Defect
 ============================================
 
 This procedure makes a single unit cell to be replicated along a User defined axis. To be carried out in a terminal.
-Better documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.php .
+Detailed documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.php .
 
 .. code:: bash
 
@@ -279,7 +298,10 @@ Coming Soon...
 Reset Orientation of Crystal
 =============================
 
-This will be used to reorient the crystal. This is needed to view the (111) refletion in pynx.
+To facilitate computation of Bragg coherent diffraction patterns the orientation of the crystal
+needs to be known in the coordinate frame of the simulation. The easiest orientation to use is
+one where the crystal lattice lies along the coordinate system axes. This command will reorient
+the simulated crystal.
 
 .. code:: python
 
@@ -306,4 +328,5 @@ This will be used to reorient the crystal. This is needed to view the (111) refl
 Viewing Crystal
 ================
 
-By using Ovito Visualization GUI one can view all the of the crystal they made in a relatively easy fashion.
+By using the Ovito Visualization GUI one can view the atomic structure
+of the simulated crystal.
