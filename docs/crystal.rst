@@ -52,7 +52,7 @@ Detailed documentation for the primary tool used here can be found at https://at
     # To be run in terminal
     atomsk --create fcc 4.0782 Au orient [-110] [11-1] [112] Au_unitcell.cfg
 
-.. figure:: images/Au_unitcell.png
+.. figure:: images/edge_unit.png
     :scale: 25 %
     :align: center
 
@@ -63,13 +63,17 @@ Making Crystal Unit Cell - For Screw Defect
 This procedure makes a single unit cell to be replicated along a User defined axis. To be carried out in a terminal.
 Detailed documentation can be found https://atomsk.univ-lille.fr/tutorial_Al_edge.php .
 
+.. warning::
+
+    Not the same command as creating an edge defect
+
 .. code:: bash
 
     # To be run in terminal
     atomsk --create fcc 4.0782 Au orient [112] [11-1] [-110] Au_unitcell.cfg
 
 
-.. figure:: images/Au_unitcell.png
+.. figure:: images/screw_unit.png
     :scale: 25 %
     :align: center
 
@@ -85,7 +89,7 @@ example is for a 2D metal. Below is an example code on how to create a 3D crysta
     import numpy as np
 
     og_cfg_file = './Au_unitcell.cfg'
-    output_file_crystal = './Au_crystal.cfg'
+    output_file_crystal = './Au_supercell.cfg'
 
     # Lattice constant for AU
     lattice = 4.078
@@ -114,9 +118,12 @@ example is for a 2D metal. Below is an example code on how to create a 3D crysta
     cmd += f' {output_file_crystal}'
 
 
+    # cmd_edge_defect = atomsk ./Au_unitcell.cfg -dup 71 29 49 ./Au_supercell.cfg
+    # cmd_screw_defect = atomsk ./Au_unitcell.cfg -dup 41 29 71 ./Au_supercell.cfg
+
     # The output of cmd is then used as a terminal command
 
-.. figure:: images/Au_duplicate.png
+.. figure:: images/edge_super.png
     :scale: 25 %
     :align: center
 
@@ -137,9 +144,12 @@ Shifting Crystal To Center
     # Add in save output
     cmd += f' {output_file_crystal_shift}'
 
+    # cmd_edge_defect = atomsk ./Au_supercell.cfg -shift -0.5*box -0.5*box ./Au_crystal_shift.cfg
+    # cmd_screw_defect = atomsk ./Au_supercell.cfg -shift -0.5*box -0.5*box ./Au_crystal_shift.cfg
+
     # Run cmd in terminal
 
-.. figure:: images/Au_shift.png
+.. figure:: images/edge_shift.png
     :scale: 25 %
     :align: center
 
@@ -196,7 +206,7 @@ Slicing A Crystal
     cmd
 
 
-.. figure:: images/slice.png
+.. figure:: images/edge_slice.png
     :scale: 25 %
     :align: center
 
@@ -231,16 +241,15 @@ Placing Edge Defect
     
     
     cmd = 'atomsk %s'%output_file_crystal_shift_slice
-    cmd += ' -dislocation 0.0 0.0 edge2 %s %s %.6f %s'%('Z', 'Y', rands3, poisson)
+    cmd += ' -dislocation 0.01 0.001 edge2 %s %s %.6f %s'%('Z', 'Y', rands3, poisson)
     
     # Add in save output
     output_file_crystal_shift_slice_edge = '/Au_crystal_shift_slice_edge.cfg'
     cmd += f' {output_file_crystal_shift_slice_edge}'
 
-
     # Run cmd in terminal
 
-.. figure:: images/edge.png
+.. figure:: images/edge_defect.png
     :scale: 25 %
     :align: center
 
