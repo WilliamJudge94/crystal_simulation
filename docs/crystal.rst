@@ -244,7 +244,7 @@ Placing Edge Defect
     cmd += ' -dislocation 0.01 0.001 edge2 %s %s %.6f %s'%('Z', 'Y', rands3, poisson)
     
     # Add in save output
-    output_file_crystal_shift_slice_edge = '/Au_crystal_shift_slice_edge.cfg'
+    output_file_crystal_shift_slice_edge = './Au_crystal_shift_slice_edge.cfg'
     cmd += f' {output_file_crystal_shift_slice_edge}'
 
     # Run cmd in terminal
@@ -268,7 +268,7 @@ Placing Screw Defect
     
     cmd = 'atomsk %s'%output_file_crystal_shift_slice_screw_shift
     
-    cmd += ' -dislocation 0.0 0.0 screw %s %s %.6f'%('Z', 'Y', rands3)
+    cmd += ' -dislocation 0.01 0.001 screw %s %s %.6f'%('Z', 'Y', rands3)
     
     # Add in save output
     output_file_crystal_shift_slice_screw = './Au_crystal_shift_slice_screw.cfg'
@@ -286,15 +286,45 @@ Placing Screw Defect
     Documentation on how to use -dislocation along with the screw function can
     be found at https://atomsk.univ-lille.fr/tutorial_Al_screw.php
 
-Shift Crystal Back
-===================
+
+Alignment Of Crystal
+====================
+This function helps align the defect crystal back to it's original orientation.
+
+.. note::
+    One will need to create 'box_size.txt' file and place it inside the working directory.
+
 
 .. code:: python
 
-    output_file_crystal_shift_slice_screw_shift = output_file_crystal_shift_slice_screw[:-4] + '_shift.cfg'
+    # Create a file called box_size.txt
+    # Place this bit of code inside the file
+    conventional
+    215 215 215
+    90.0 90.0 90.0
+
+.. note::
+    215 denotes the simulation cell size for the LAMMPS relaxation. This should be larger than the inital SuperCell.cfg size.
+
+
+.. code:: python
+
+    input_file = './Au_crystal_shift_slice_screw.cfg'
+    output_file = './Au_crystal_shift_slice_screw_align.cfg'
+
+    cmd = f'atomsk {input_file} -alignx -properties box_size.txt {output_file}'
+
+    # Run cmd inside your terminal
+
+Shift Screw Crystal Back
+========================
+
+.. code:: python
+
+    output_file_crystal_shift_slice_screw_shift = output_file_crystal_shift_slice_screw_align[:-4] + '_shift.cfg'
     
     # Initial starting command
-    cmd = 'atomsk %s'%output_file_crystal_shift_slice_screw
+    cmd = 'atomsk %s'%output_file_crystal_shift_slice_screw_align
     
     # Add in shift
     shift = ['0.5*box']*3
