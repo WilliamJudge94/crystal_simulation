@@ -111,7 +111,7 @@ to import all required packges for pynx operation.
         !cd gpyfft && git checkout 2c07fa8e7674757 && python setup.py install
 
 LAMMPS
-======
+=======
 
 Create a conda environment with the dependancies already loaded by using the following command
 
