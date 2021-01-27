@@ -110,3 +110,15 @@ to import all required packges for pynx operation.
         !git clone https://github.com/geggo/gpyfft.git
         !cd gpyfft && git checkout 2c07fa8e7674757 && python setup.py install
 
+LAMMPS
+======
+
+Create a conda environment with the dependancies already loaded by using the following command
+
+.. code:: bash
+
+    conda env create -f lammps_env.yml
+
+.. note::
+
+    If this doesnt work please follow instructions found https://lammps.sandia.gov/doc/Install.html

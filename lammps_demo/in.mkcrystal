@@ -1,0 +1,26 @@
+${lmpfiles}
+
+label loop
+
+# -----------------------------------
+units metal
+boundary f f f
+atom_style atomic
+
+read_data lmpdata/${outname}_0.lmp
+
+pair_style eam
+pair_coeff  * * ff/Au_u3.eam
+
+neighbor 2.0 nsq
+neigh_modify delay 0 every 1 check yes
+
+min_style cg
+minimize 1.0e-6 1.0e-6 1000 1000
+
+write_data lmpdata/${outname}_1.lmp
+# -----------------------------------
+
+clear
+next outname
+jump in.min_all loop

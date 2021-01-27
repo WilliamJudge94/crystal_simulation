@@ -343,7 +343,25 @@ Shift Screw Crystal Back
 Relaxation of Crystal
 ======================
 
-Coming Soon...
+To relax the structures created through AtomSK one must use the LAMMPS program. Installation instructions can be
+found on the installation page of the Docs.
+
+To run a demonstration of LAMMPS one must first activate the appropriate conda environment.
+
+.. code:: bash
+
+    # Activate the conda env
+    source activate lammps_env
+    
+    # cd to appropriate directory for sample LAMMPS simulation
+    cd ./path/to/crystal_simulation_rep/lammps_demo/
+
+    # command to run simulations
+    # the number after -np is how many cpu cores the User would like to use
+    mpirun -np 4 lmp_mpi -in in.min_all 
+
+
+
 
 
 Reset Orientation of Crystal
