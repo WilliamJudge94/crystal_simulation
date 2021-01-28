@@ -356,7 +356,39 @@ To run a demonstration of LAMMPS one must first activate the appropriate conda e
     # cd to appropriate directory for sample LAMMPS simulation
     cd ./path/to/crystal_simulation_rep/lammps_demo/
 
-    # command to run simulations
+
+    # Edit the in.min_all file
+
+        # define system units, simulation box boundary type, and input data style
+        units metal
+        boundary f f f
+        atom_style atomic
+        
+        # import lammps data file (simulation box dimension, atom coordinates, atom type)
+        read_data lmpdata/${outname}_0.lmp
+    
+        # define interatomic interactions (force field)
+        # in this case, we use the EAM functional form with parameters for gold
+        # see https://lammps.sandia.gov/doc/pair_eam.html
+        #  note: Au_u3.eam is taken from the lammps source code directory called "potentials"
+        pair_style eam
+        pair_coeff  * * ff/Au_u3.eam
+    
+        neighbor 2.0 nsq
+        neigh_modify delay 0 every 1 check yes
+    
+        # define energy minimization criteria and run minimization
+        # note: that this is a very short minimization, adjust the values acoordingly
+        # see https://lammps.sandia.gov/doc/minimize.html
+    
+        min_style cg
+        minimize 1.0e-6 1.0e-6 1000 1000
+    
+        # output minimized structure to lammps data file format
+        write_data lmpdata/${outname}_1.lmp
+
+
+    # command to run simulations in terminal
     # the number after -np is how many cpu cores the User would like to use
     mpirun -np 4 lmp_mpi -in in.min_all 
 
