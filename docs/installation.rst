@@ -2,6 +2,9 @@
 Installing Required Packages
 *****************************
 
+GitHub Repo
+===========
+This repository contains some files needed for the tutorial https://github.com/WilliamJudge94/crystal_simulation
 
 AtomSK
 =======
