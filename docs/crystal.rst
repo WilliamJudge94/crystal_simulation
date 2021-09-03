@@ -406,7 +406,7 @@ the simulated crystal.
 
 .. code:: python
 
-    original_orientation = '[-110] [11-1] [112]'
+    original_orientation = '[112] [11-1] [-110]'
     desired_reorient = '[100] [010] [001]'
 
     input_file = './Au_crystal_shift_slice_screw.cfg'
